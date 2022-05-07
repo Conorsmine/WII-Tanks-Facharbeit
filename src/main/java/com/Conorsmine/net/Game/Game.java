@@ -3,8 +3,6 @@ package com.Conorsmine.net.Game;
 import com.Conorsmine.net.EventSystem.Events.GameTickEvent;
 import com.Conorsmine.net.EventSystem.Events.RenderTickEvent;
 import com.Conorsmine.net.EventSystem.EventsManager.EventManager;
-import com.Conorsmine.net.Rendering.GameRenderer;
-import com.Conorsmine.net.Rendering.GameWindow;
 
 public class Game {
 
