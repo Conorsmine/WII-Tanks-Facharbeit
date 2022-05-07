@@ -1,12 +1,14 @@
 package com.Conorsmine.net;
 
-import com.Conorsmine.net.Game.Events.CollideEvent;
-import com.Conorsmine.net.Game.EventsManager.EventManager;
+import com.Conorsmine.net.Entities.Tanks.PlayerTank;
+import com.Conorsmine.net.EventSystem.EventsManager.EventManager;
+import com.Conorsmine.net.Game.Game;
 
 public class Main {
 
     public static void main(String[] args) {
+        new PlayerTank();
         new EventManager();
-        EventManager.INSTANCE.callEvent(new CollideEvent());
+        new Game();
     }
 }
