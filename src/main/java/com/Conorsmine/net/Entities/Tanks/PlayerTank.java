@@ -1,11 +1,8 @@
 package com.Conorsmine.net.Entities.Tanks;
 
-import com.Conorsmine.net.Entities.GameObjects;
-
 import java.awt.*;
-import java.time.Instant;
 
-public class PlayerTank extends GameObjects {
+public class PlayerTank extends Tanks {
 
     @Override
     public void render(Graphics2D g) {

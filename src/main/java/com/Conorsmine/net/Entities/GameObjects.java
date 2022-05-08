@@ -1,5 +1,7 @@
 package com.Conorsmine.net.Entities;
 
+import com.sun.javafx.geom.Vec2d;
+
 import java.awt.*;
 import java.util.HashMap;
 import java.util.UUID;
@@ -10,6 +12,7 @@ public abstract class GameObjects implements Tickable {
 
     private final UUID id;
     private int x, y;
+    private Vec2d rot = new Vec2d(0, 0);
     private boolean render = true;
 
     public GameObjects(UUID id) {
@@ -33,12 +36,20 @@ public abstract class GameObjects implements Tickable {
         return y;
     }
 
+    public Vec2d getRot() {
+        return rot;
+    }
+
     public void setX(int x) {
         this.x = x;
     }
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public void setRot(Vec2d rot) {
+        this.rot = rot;
     }
 
     public void addX(int xOffset) {
