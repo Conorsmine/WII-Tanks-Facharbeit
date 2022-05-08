@@ -32,6 +32,7 @@ public class GameWindow extends JPanel {
 
     public void drawCall(Graphics g) {
         this.paintComponent(g);
+        g.dispose();
     }
 
     @Override
@@ -39,11 +40,9 @@ public class GameWindow extends JPanel {
         super.paintComponent(g);
 
         if ((this.counter++ % 2) == 0) return;
-        Graphics2D g2d = (Graphics2D) g;
         new HashMap<>(GameObjects.objectMap).forEach((id, obj) -> {
-            obj.renderTick(g2d);
+            obj.renderTick(((Graphics2D) g));
         });
-        g2d.dispose();
     }
 
     public JFrame getWindow() {

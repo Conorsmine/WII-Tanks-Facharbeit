@@ -56,8 +56,8 @@ public abstract class GameObjects implements Tickable {
         this.rot = Math.toDegrees(Math.atan(dir.y / dir.x));
     }
 
-    public void setRot(double rot) {
-        this.rot = rot % 360;
+    public void setRot(double degrees) {
+        this.rot = degrees % 360;
     }
 
     public void addX(int xOffset) {
