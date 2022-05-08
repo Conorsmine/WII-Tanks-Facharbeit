@@ -4,11 +4,13 @@ import com.Conorsmine.net.Entities.GameObjects;
 
 import javax.swing.*;
 import java.awt.*;
+import java.time.Instant;
 import java.util.HashMap;
 
 public class GameWindow extends JPanel {
 
     private final JFrame window;
+    private long counter = 0;
 
     public GameWindow(String title, int width, int height) {
         this.window = new JFrame(title);
@@ -36,6 +38,7 @@ public class GameWindow extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        if ((this.counter++ % 2) == 0) return;
         Graphics2D g2d = (Graphics2D) g;
         new HashMap<>(GameObjects.objectMap).forEach((id, obj) -> {
             obj.renderTick(g2d);

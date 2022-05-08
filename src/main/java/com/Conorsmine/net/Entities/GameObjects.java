@@ -12,7 +12,7 @@ public abstract class GameObjects implements Tickable {
 
     private final UUID id;
     private int x, y;
-    private Vec2d rot = new Vec2d(0, 0);
+    private double rot = 0;     // in degrees
     private boolean render = true;
 
     public GameObjects(UUID id) {
@@ -36,7 +36,7 @@ public abstract class GameObjects implements Tickable {
         return y;
     }
 
-    public Vec2d getRot() {
+    public double getRot() {
         return rot;
     }
 
@@ -48,8 +48,16 @@ public abstract class GameObjects implements Tickable {
         this.y = y;
     }
 
-    public void setRot(Vec2d rot) {
-        this.rot = rot;
+    public void setRot(Vec2d dir) {
+        if (dir.x == 0) {
+            this.rot = 0;
+            return;
+        }
+        this.rot = Math.toDegrees(Math.atan(dir.y / dir.x));
+    }
+
+    public void setRot(double rot) {
+        this.rot = rot % 360;
     }
 
     public void addX(int xOffset) {
