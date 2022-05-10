@@ -1,6 +1,8 @@
 package com.Conorsmine.net.Entities;
 
+import com.Conorsmine.net.Rendering.Models.TexturedModel;
 import com.sun.javafx.geom.Vec2d;
+import org.lwjgl.util.vector.Vector3f;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -11,80 +13,73 @@ public abstract class GameObjects implements Tickable {
     public static final HashMap<UUID, GameObjects> objectMap = new HashMap<>();
 
     private final UUID id;
-    private int x, y;
-    private double rot = 0;     // in degrees
-    private boolean render = true;
+    private TexturedModel model;
+    private Vector3f position = new Vector3f(0, 0, 0);  // positional offset using a vector
+    private Vector3f rotation = new Vector3f(0, 0, 0);  // rotational offset
+    private float scale = 1;
 
-    public GameObjects(UUID id) {
+
+    public GameObjects(UUID id, TexturedModel model) {
         this.id = id;
+        this.model = model;
         objectMap.put(id, this);
     }
 
-    public GameObjects() {
-        this(UUID.randomUUID());
+    public GameObjects(TexturedModel model) {
+        this(UUID.randomUUID(), model);
+    }
+
+    public void destroy() {
+        objectMap.remove(this.id);
+    }
+
+
+
+    public void addPosition(Vector3f offset) {
+        this.position.x += offset.x;
+        this.position.y += offset.y;
+        this.position.z += offset.z;
+    }
+
+    public void addRotation(Vector3f offset) {
+        this.rotation.x += offset.x;
+        this.rotation.y += offset.y;
+        this.rotation.z += offset.z;
     }
 
     public UUID getId() {
         return id;
     }
 
-    public int getX() {
-        return x;
+    public TexturedModel getModel() {
+        return model;
     }
 
-    public int getY() {
-        return y;
+    public void setModel(TexturedModel model) {
+        this.model = model;
     }
 
-    public double getRot() {
-        return rot;
+    public Vector3f getPosition() {
+        return position;
     }
 
-    public void setX(int x) {
-        this.x = x;
+    public void setPosition(Vector3f position) {
+        this.position = position;
     }
 
-    public void setY(int y) {
-        this.y = y;
+    public Vector3f getRotation() {
+        return rotation;
     }
 
-    public void setRot(Vec2d dir) {
-        if (dir.x == 0) {
-            this.rot = 0;
-            return;
-        }
-        this.rot = Math.toDegrees(Math.atan(dir.y / dir.x));
+    public void setRotation(Vector3f rotation) {
+        this.rotation = rotation;
     }
 
-    public void setRot(double degrees) {
-        this.rot = degrees % 360;
+    public float getScale() {
+        return scale;
     }
 
-    public void addX(int xOffset) {
-        this.x += xOffset;
-    }
-
-    public void addY(int yOffset) {
-        this.y += yOffset;
-    }
-
-    public boolean isRender() {
-        return render;
-    }
-
-    public void destroy() {
-        this.render = false;
-        objectMap.remove(this.id);
-    }
-
-    @Override
-    public void renderTick(Graphics g) {
-        if (this.render) this.render(((Graphics2D) g));
-    }
-
-    public abstract void render(Graphics2D g2d);
-
-    public void shouldRender(boolean render) {
-        this.render = render;
+    public void setScale(float scale) {
+        this.scale = scale;
     }
 }

@@ -1,6 +1,11 @@
 package com.Conorsmine.net.EventSystem.Events;
 
+import com.Conorsmine.net.Entities.GameObjects;
 import com.Conorsmine.net.EventSystem.EventsManager.Event;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class GameTickEvent extends Event {
 
@@ -13,7 +18,10 @@ public class GameTickEvent extends Event {
 
     @Override
     public void onCall(Event ev) {
-//        System.out.println("Game: " + ((GameTickEvent) ev).getTick());
+        // tick all entities
+        new HashMap<>(GameObjects.objectMap).forEach((id, obj) -> {
+            obj.tick();
+        });
     }
 
     public long getTick() {return tick;}
