@@ -1,10 +1,8 @@
 package com.Conorsmine.net.Entities;
 
 import com.Conorsmine.net.Rendering.Models.TexturedModel;
-import com.sun.javafx.geom.Vec2d;
 import org.lwjgl.util.vector.Vector3f;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.UUID;
 

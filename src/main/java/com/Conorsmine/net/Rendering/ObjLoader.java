@@ -18,7 +18,7 @@ public class ObjLoader {
 
         // Get .obj file
         try {
-            fReader = new FileReader(new File("src/main/resources/" + fileName + ".obj"));
+            fReader = new FileReader(new File("src/main/resources/assets/" + fileName + ".obj"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             System.err.println("OBJ file couldn't be found!");

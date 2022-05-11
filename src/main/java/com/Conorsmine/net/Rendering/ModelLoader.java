@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL30;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.FloatBuffer;
@@ -32,10 +33,25 @@ public class ModelLoader {
         return new RawModel(vaoID, indices.length);
     }
 
+    public RawModel loadToVAO(float[] positions) {
+        int vaoID = createVAO();
+        this.storeDataInAttributeList(0, positions, 2);
+        unbindVAO();
+        return new RawModel(vaoID, positions.length / 2);
+    }
+
+    public int loadToVAO(float[] positions, float[] textureCoords) {
+        int vaoID = createVAO();
+        storeDataInAttributeList(0, positions, 2);
+        storeDataInAttributeList(1, textureCoords, 2);
+        unbindVAO();
+        return vaoID;
+    }
+
     public int loadTexture(String textureame) {
         Texture texture = null;
         try {
-            texture = TextureLoader.getTexture("PNG", new FileInputStream("src/main/resources/" + textureame + ".png"));
+            texture = TextureLoader.getTexture("PNG", new FileInputStream("src/main/resources/assets/" + textureame + ".png"));
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Image could not be loaded, make sure the image is of type PNG and has a size of x^2 !");
@@ -45,6 +61,25 @@ public class ModelLoader {
         textures.add(textureID);
 
         return textureID;
+    }
+
+    public int loadFontImage(String textureame) {
+        Texture texture = null;
+        try {
+            texture = TextureLoader.getTexture("PNG", new FileInputStream("src/main/resources/Fonts/" + textureame + ".png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Image could not be loaded, make sure the image is of type PNG and has a size of x^2 !");
+        }
+
+        int textureID = texture.getTextureID();
+        textures.add(textureID);
+
+        return textureID;
+    }
+
+    public File loadFont(String fontName) {
+        return new File("src/main/resources/Fonts/" + fontName + ".fnt");
     }
 
     private int createVAO() {
