@@ -22,9 +22,9 @@ public class Game {
     public static Game GAME;
     public static final int TPS = 60, FPS = 30;    // Both are in tps (ticks per second)
     private final ModelLoader loader = new ModelLoader();
-    private final RenderManager renderer = new RenderManager();
+    private RenderManager renderer;
     private final List<GuiTexture> guiList = new ArrayList<>();
-    private final GuiRenderer guiRenderer = new GuiRenderer(this.loader);
+    private GuiRenderer guiRenderer;
     private boolean running = false;
     private Thread gameThread;
 
@@ -79,6 +79,8 @@ public class Game {
     }
 
     private void startRenderThread() {
+        this.renderer = new RenderManager();
+        this.guiRenderer = new GuiRenderer(this.loader);
         Camera camera = new Camera();
         TextMaster.init(this.loader);
         Light sun = new Light(new Vector3f(0, 0, -20), new Vector3f(1, 1, 1));
