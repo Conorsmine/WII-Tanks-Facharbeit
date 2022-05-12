@@ -16,6 +16,7 @@ public class DisplayManager {
 
         try {
             Display.setDisplayMode(new DisplayMode(WIDHT, HEIGHT));
+            Display.setResizable(true);
             Display.setTitle("WII Tanks");
             Display.create(new PixelFormat(), attribs);
         } catch (LWJGLException e) {

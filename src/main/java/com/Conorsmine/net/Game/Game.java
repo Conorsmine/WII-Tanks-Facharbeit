@@ -1,5 +1,7 @@
 package com.Conorsmine.net.Game;
 
+import com.Conorsmine.net.Entities.GameObjects;
+import com.Conorsmine.net.Entities.TestEntity;
 import com.Conorsmine.net.EventSystem.Events.GameShuttdownEvent;
 import com.Conorsmine.net.EventSystem.Events.GameTickEvent;
 import com.Conorsmine.net.EventSystem.Events.RenderTickEvent;
@@ -10,6 +12,8 @@ import com.Conorsmine.net.Rendering.Fonts.fontMeshCreator.GUIText;
 import com.Conorsmine.net.Rendering.Fonts.fontRendering.TextMaster;
 import com.Conorsmine.net.Rendering.Guis.GuiRenderer;
 import com.Conorsmine.net.Rendering.Guis.GuiTexture;
+import com.Conorsmine.net.Rendering.Models.TexturedModel;
+import com.Conorsmine.net.Rendering.Textures.ModelTexture;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -84,6 +88,8 @@ public class Game {
         Camera camera = new Camera();
         TextMaster.init(this.loader);
         Light sun = new Light(new Vector3f(0, 0, -20), new Vector3f(1, 1, 1));
+
+        GameObjects obj = new TestEntity(new TexturedModel(ObjLoader.loadObjModel("tankv2", this.loader), new ModelTexture(this.loader.loadTexture("amethyst_block"))));
 
         double renderTickSpeed = 1000000000 / FPS;
         double delta = 0;

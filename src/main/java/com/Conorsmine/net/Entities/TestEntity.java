@@ -7,7 +7,7 @@ public class TestEntity extends GameObjects {
 
     public TestEntity(TexturedModel model) {
         super(model);
-        this.setPosition(new Vector3f(0, 0, -25));
+        this.setPosition(new Vector3f(0, 0, -8));
     }
 
     @Override
