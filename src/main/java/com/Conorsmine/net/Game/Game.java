@@ -82,6 +82,7 @@ public class Game {
         this.gameThread.start();
     }
 
+    public static TestEntity turret;
     private void startRenderThread() {
         this.renderer = new RenderManager();
         this.guiRenderer = new GuiRenderer(this.loader);
@@ -89,7 +90,17 @@ public class Game {
         TextMaster.init(this.loader);
         Light sun = new Light(new Vector3f(0, 0, -20), new Vector3f(1, 1, 1));
 
-        GameObjects obj = new TestEntity(new TexturedModel(ObjLoader.loadObjModel("tankv2", this.loader), new ModelTexture(this.loader.loadTexture("amethyst_block"))));
+        camera.setPosition(new Vector3f(0, 3, 8));
+        camera.setPitch(20);
+
+        GameObjects tankBody = new TestEntity(new TexturedModel(ObjLoader.loadObjModel("tank", this.loader), new ModelTexture(this.loader.loadTexture("tankTextureV2"))));
+//        turret = new TestEntity(new TexturedModel(ObjLoader.loadObjModel("tankTurretV1", this.loader), new ModelTexture(this.loader.loadTexture("amethyst_block"))));
+
+        tankBody.setRotation(new Vector3f(0, 180, 0));
+//        turret.setRotation(new Vector3f(0, 200, 0));
+        tankBody.setScale(0.5f);
+//        turret.setScale(0.5f);
+
 
         double renderTickSpeed = 1000000000 / FPS;
         double delta = 0;
@@ -106,6 +117,7 @@ public class Game {
             delta += (currentTime - lastUpdateTime) / renderTickSpeed;
             lastUpdateTime = currentTime;
             if (delta >= 1) {
+                System.out.printf("FPS: %s\n", FPS / delta);
                 // Do stuff here, as it should run with the given GAME_TICK_SPEED
                 EventManager.callEvent(new RenderTickEvent(tick++, camera, sun));
                 delta--;

@@ -1,59 +1,22 @@
 package com.Conorsmine.net;
 
-import com.Conorsmine.net.Entities.Walls.Line;
+import com.Conorsmine.net.Entities.Wall;
+import com.Conorsmine.net.Game.Game;
 import com.Conorsmine.net.Utils.Maths;
+import com.sun.javafx.geom.Vec4f;
 import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector4f;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Main {
 
-    private static final List<Line> lineList = new ArrayList<>();
+    private static final List<Wall> lineList = new ArrayList<>();
 
     public static void main(String[] args) {
 //        new Game();
-        long milli = System.currentTimeMillis();
-
-        // 4 main walls
-        lineList.add(new Line(new Vector2f(0, 14), new Vector2f(14, 14), new Vector2f(0, -1)));     // N
-        lineList.add(new Line(new Vector2f(0, 0), new Vector2f(14, 0), new Vector2f(0, 1)));        // S
-        lineList.add(new Line(new Vector2f(14, 0), new Vector2f(14, 14), new Vector2f(-1, 0)));     // E
-        lineList.add(new Line(new Vector2f(0, 0), new Vector2f(0, 14), new Vector2f(1, 0)));        // W
-
-        // W1
-        lineList.add(new Line(new Vector2f(0, 12), new Vector2f(5, 12), new Vector2f(0, 1)));
-        lineList.add(new Line(new Vector2f(0, 10), new Vector2f(5, 10), new Vector2f(0, -1)));
-        lineList.add(new Line(new Vector2f(5, 10), new Vector2f(5, 12), new Vector2f(1, 0)));
-
-        // W2
-        lineList.add(new Line(new Vector2f(0, 7), new Vector2f(6, 7), new Vector2f(0, 1)));
-        lineList.add(new Line(new Vector2f(0, 5), new Vector2f(6, 5), new Vector2f(0, -1)));
-        lineList.add(new Line(new Vector2f(6, 5), new Vector2f(6, 7), new Vector2f(1, 0)));
-
-        // W3
-        lineList.add(new Line(new Vector2f(11, 7), new Vector2f(14, 7), new Vector2f(0, 1)));
-        lineList.add(new Line(new Vector2f(11, 5), new Vector2f(14, 5), new Vector2f(0, -1)));
-        lineList.add(new Line(new Vector2f(11, 5), new Vector2f(11, 7), new Vector2f(-1, 0)));
-
-        // W4
-        lineList.add(new Line(new Vector2f(7, 0), new Vector2f(7, 4), new Vector2f(-1, 0)));
-        lineList.add(new Line(new Vector2f(9, 0), new Vector2f(9, 4), new Vector2f(1, 0)));
-        lineList.add(new Line(new Vector2f(7, 4), new Vector2f(9, 4), new Vector2f(0, -1)));
-
-        // Tanks
-        Vector2f player = new Vector2f(5, 8);
-        Vector2f tankT1 = new Vector2f(2, 13);  // (3, 1)
-        Vector2f tankT2 = new Vector2f(2, 9);   // (-3, 1)  ✔
-        Vector2f tankT3 = new Vector2f(5, 4);   // (3, -1)  ✔
-        Vector2f tankT4 = new Vector2f(11, 3);  // (6, -5)  ✔
-
-
-        Vector2f vec = findTargetTrajectory(player, tankT1, 1, 2, 1);
-        System.out.println(vec);
-
-
-        System.out.println("The code took: " + (System.currentTimeMillis() - milli) + " milli seconds.");
     }
 
 
@@ -66,8 +29,12 @@ public class Main {
      * @return Vector for hitting the target with the giving parameters.
      */
     private static Vector2f findTargetTrajectory(Vector2f origin, Vector2f target, float rotOffset, int bounces, float margin) {
-        if (canHit(origin, target)) return new Vector2f(target.x - origin.x, target.y - origin.y);
-        rotOffset = (float) Math.max(rotOffset, 0.2);
+        if (canHit(origin, target)) return new Vector2f(target.getX() - origin.getX(), target.getY() - origin.getY());
+
+        Vector2f parCheck = parallelityCheck(origin, target);
+        if (parCheck != null) return new Vector2f((parCheck.getX() - origin.getX()), (parCheck.getY() - origin.getY()));
+
+        rotOffset = (float) Math.max(rotOffset, 0.005);
 
         // check radially for bullet trajectory
         for (double rot = 0; rot < 360; rot += rotOffset) {
@@ -75,18 +42,19 @@ public class Main {
 
             // Loop for each bounce and check if the bullet will hit within the margin
             for (int i = 0; i < bounces; i++) {
+
                 BulletHit wallHit = findIntersectionWithClosestLine(origin, dir);
                 if (wallHit == null) continue;
 
                 // Reflect of the wall
                 Vector2f hit = wallHit.getHit();
-                Line wall = wallHit.getWall();
+                Wall wall = wallHit.getWall();
                 Vector2f reflection = Maths.reflect(dir, wall.getNormal());
-                Line reflectedLine = new Line(hit, Maths.pointOnVectorLine(hit, reflection, 40000), null);
+                Wall reflectedLine = new Wall(hit, Maths.pointOnVectorLine(hit, reflection, 40000), null);
 
                 // Create HelpLine to check for the distance between the target
                 Vector2f targetLineNormal = Maths.orthotoganlLine(reflection);
-                Line helpLine = new Line(
+                Wall helpLine = new Wall(
                         Maths.pointOnVectorLine(target, targetLineNormal, margin),
                         Maths.pointOnVectorLine(target, targetLineNormal, -margin),
                         null
@@ -108,14 +76,45 @@ public class Main {
         return null;
     }
 
+    // This function checks if the target can be hit via one reflection by checking if there is a reflection halfway between the origin and the target point.
+    private static Vector2f parallelityCheck(Vector2f origin, Vector2f target) {
+        Vector2f halfwayTransform = new Vector2f((target.getX() - origin.getX()) * 0.5f, (target.getY() - origin.getY()) * 0.5f);
+        Vector2f halfwayOriginToTarget = new Vector2f((origin.getX() + halfwayTransform.getX()), (origin.getY() + halfwayTransform.getY()));
+        Vector2f normal = (Vector2f) Maths.orthotoganlLine(halfwayTransform).normalise();
+        Vector2f normalPointA = Maths.pointOnVectorLine(halfwayOriginToTarget, normal, 40000);
+        Vector2f normalPointB = Maths.pointOnVectorLine(halfwayOriginToTarget, normal, -40000);
+        normal = new Vector2f(Math.abs(normal.getX()), Math.abs(normal.getY()));
+
+        for (Wall line : lineList) {
+            Vector2f reflectionPoint = Maths.lineIntersection(new Wall(normalPointA, normalPointB, null), line);
+
+            // Can hit the wall from the current location
+            if (reflectionPoint == null) continue;
+
+            // Opposite vector of the wall, should be identical to the normal vector
+            Vector2f wallNormal = (Vector2f) new Vector2f(Math.abs(line.getNormal().getX()), Math.abs(line.getNormal().getY())).normalise();
+
+            // Check if the wall allows for the correct reflection
+            if (!wallNormal.equals(normal)) continue;
+
+            // Checks if the reflectionPoint can be hit
+            if (!canHit(origin, Maths.pointOnVectorLine(origin, new Vector2f((reflectionPoint.getX() - origin.getX()), (reflectionPoint.getY() - origin.getY())), 0.9f))) continue;
+
+            // Wall could reflect correctly
+            return reflectionPoint;
+        }
+
+        return null;
+    }
+
     private static BulletHit findIntersectionWithClosestLine(Vector2f origin, Vector2f dir) {
         double distance = Float.POSITIVE_INFINITY;
         Vector2f out = null;
-        Line wall = null;
+        Wall wall = null;
 
-        for (Line line : lineList) {
+        for (Wall line : lineList) {
             Vector2f hit = Maths.lineIntersection(
-                    new Line(origin, Maths.pointOnVectorLine(origin, dir, 40000), null),
+                    new Wall(origin, Maths.pointOnVectorLine(origin, dir, 40000), null),
                     line
             );
 
@@ -135,9 +134,9 @@ public class Main {
     // If the closest intersection with the wall is also needed use "findIntersectionWithClosestLine" and check if it's null, does the same.
     // But if you only need to check if there is a wall in the way then use this, as it is faster
     private static boolean canHit(Vector2f origin, Vector2f target) {
-        for (Line line : lineList) {
+        for (Wall line : lineList) {
             Vector2f hit = Maths.lineIntersection(
-                    new Line(origin, target, null),
+                    new Wall(origin, target, null),
                     line
             );
 
@@ -149,9 +148,9 @@ public class Main {
 
     public static class BulletHit {
         private final Vector2f hit;
-        private final Line wall;
+        private final Wall wall;
 
-        public BulletHit(Vector2f hit, Line wall) {
+        public BulletHit(Vector2f hit, Wall wall) {
             this.hit = hit;
             this.wall = wall;
         }
@@ -160,7 +159,7 @@ public class Main {
             return hit;
         }
 
-        public Line getWall() {
+        public Wall getWall() {
             return wall;
         }
 

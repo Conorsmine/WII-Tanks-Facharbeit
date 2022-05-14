@@ -1,9 +1,8 @@
 package com.Conorsmine.net.Utils;
 
-import com.Conorsmine.net.Entities.Walls.Line;
+import com.Conorsmine.net.Entities.Wall;
 import com.Conorsmine.net.Rendering.Camera;
 import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -38,7 +37,7 @@ public class Maths {
         return matrix;
     }
 
-    public static Vector2f lineIntersection(Line line1, Line line2) {
+    public static Vector2f lineIntersection(Wall line1, Wall line2) {
         float[] transformLineA = line1.getTransformLine();
         float[] transformLineB = line2.getTransformLine();
 
@@ -87,7 +86,7 @@ public class Maths {
         return new Vector2f(dir.getY(), -dir.getX());
     }
 
-    private static boolean isWithinRange(Vector2f point, Line line) {
+    private static boolean isWithinRange(Vector2f point, Wall line) {
         Vector2f pA = line.getPointA();
         Vector2f pB = line.getPointB();
 
