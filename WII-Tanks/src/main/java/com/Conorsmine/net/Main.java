@@ -1,25 +1,20 @@
 package com.Conorsmine.net;
 
 import com.Conorsmine.net.Entities.Wall;
-import com.Conorsmine.net.Game.Game;
-import com.Conorsmine.net.Utils.Maths;
-import com.sun.javafx.geom.Vec4f;
 import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector4f;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class Main {
 
     private static final List<Wall> lineList = new ArrayList<>();
 
     public static void main(String[] args) {
-        System.out.println("s".matches("\\s*"));
+        System.out.println("help".hashCode());
+
 //        new Game();
     }
-
 
     /**
      * @param origin The origin point.
@@ -29,7 +24,7 @@ public class Main {
      * @param margin The margin of error to the target point.
      * @return Vector for hitting the target with the giving parameters.
      */
-    private static Vector2f findTargetTrajectory(Vector2f origin, Vector2f target, float rotOffset, int bounces, float margin) {
+    /*private static Vector2f findTargetTrajectory(Vector2f origin, Vector2f target, float rotOffset, int bounces, float margin) {
         if (canHit(origin, target)) return new Vector2f(target.getX() - origin.getX(), target.getY() - origin.getY());
 
         Vector2f parCheck = parallelityCheck(origin, target);
@@ -145,7 +140,7 @@ public class Main {
         }
 
         return true;
-    }
+    }*/
 
     public static class BulletHit {
         private final Vector2f hit;

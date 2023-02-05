@@ -7,7 +7,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="WII-Tanks" />
-        <module name="WII-Tanks-Facharbeit" />
       </profile>
     </annotationProcessing>
   </component>
